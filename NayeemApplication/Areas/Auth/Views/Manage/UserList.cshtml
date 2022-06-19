@@ -3,12 +3,13 @@
 @using NayeemApplication.Services.AuthService.Interfaces
 @using System
 @inject IUserInfoes userInfo
+@inject IUserServiceSP userServiceSP
 
 @{
     ViewData["Title"] = "User List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var userInfos = await userInfo.GetUserInfoByUser(User.Identity.Name);
+    var userInfos = await userServiceSP.GetUserInfoByUser(User.Identity.Name);
     var roleName = await userInfo.GetUserRoleByByUserId(userInfos.Id);
 }
 
@@ -67,7 +68,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="fw-bold text-gray-600">
-                                                @foreach (var data in Model.aspNetUsersViewModels.OrderByDescending(x => x.createdAt))
+                                                @foreach (var data in Model.aspNetUsersViewModels)
                                                 {
                                                     <tr>
                                                         <td>@data.UserName</td>

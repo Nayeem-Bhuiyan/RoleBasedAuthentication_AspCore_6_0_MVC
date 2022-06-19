@@ -7,8 +7,6 @@ namespace NayeemApplication.Areas.Auth.Models.AccountViewModels
     {
        
         public string Name { get; set; }//User Name
-        [Required]
-        [RegularExpression(@"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$", ErrorMessage = "Invalid email")]
         public string Email { get; set; }
         public string RoleId { get; set; }
         [Required]
@@ -24,8 +22,19 @@ namespace NayeemApplication.Areas.Auth.Models.AccountViewModels
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        public string Website { get; set; }
-        public string Company { get; set; }
+
+
+
+        public IFormFile UploadUserPhoto { get; set; }
+        public IFormFile UploadUserCV { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [Display(Name = "Date Of Birth")]
+        public DateTime dateOfBirth { get; set; }
+        [RegularExpression("([0-9]+)")]
+        public int userCity { get; set; }
+
 
         public IEnumerable<ApplicationRoleViewModel> userRoles { get; set; }
         public IEnumerable<Country> countries { get; set; }

@@ -44,7 +44,7 @@
                 <!--begin::Wrapper-->
                 <div class="w-lg-600px p-10 p-lg-15 mx-auto">
                     <!--begin::Form-->
-                    <form class="form w-100" id="kt_sign_up_form" asp-area="Auth" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                    <form class="form w-100" id="kt_sign_up_form" asp-area="Auth" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" enctype="multipart/form-data">
                         <!--begin::Heading-->
                         <div class="mb-10 text-center">
                             <!--begin::Title-->
@@ -89,14 +89,32 @@
                         <div class="row fv-row mb-7">
                             <!--begin::Col-->
                             <div class="col-xl-6">
-                                <label class="form-label fw-bolder text-dark fs-6">Company</label>
-                                <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" id="Company" name="Company" autocomplete="off" />
+                                <label class="form-label fw-bolder text-dark fs-6">Date Of Birth</label>
+
+                                <input class="form-control form-control-solid" placeholder="Date Of Birth" id="dateOfBirth" name="dateOfBirth"/>
+
                             </div>
                             <!--end::Col-->
                             <!--begin::Col-->
                             <div class="col-xl-6">
-                                <label class="form-label fw-bolder text-dark fs-6">Website</label>
-                                <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" id="Website" name="Website" autocomplete="off" />
+                                <label class="form-label fw-bolder text-dark fs-6">Phone Number</label>
+                                <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" id="PhoneNumber" name="PhoneNumber" autocomplete="off" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row fv-row mb-7">
+                            <!--begin::Col-->
+                            <div class="col-xl-6">
+                                <label class="form-label fw-bolder text-dark fs-6">Upload Photo</label>
+
+                                <input type="file" class="form-control form-control-solid" id="UploadUserPhoto" name="UploadUserPhoto" />
+
+                            </div>
+                            <!--end::Col-->
+                            <!--begin::Col-->
+                            <div class="col-xl-6">
+                                <label class="form-label fw-bolder text-dark fs-6">Upload CV</label>
+                                <input  class="form-control form-control-lg form-control-solid" type="file"  id="UploadUserCV" name="UploadUserCV" autocomplete="off" />
                             </div>
                             <!--end::Col-->
                         </div>
@@ -111,12 +129,6 @@
                         <div class="row fv-row mb-7">
                             <!--begin::Col-->
                             <div class="col-xl-6">
-                                <label class="form-label fw-bolder text-dark fs-6">Phone Number</label>
-                                <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" id="PhoneNumber" name="PhoneNumber" autocomplete="off" />
-                            </div>
-                            <!--end::Col-->
-                            <!--begin::Col-->
-                            <div class="col-xl-6">
                                 <label class="form-label fw-bolder text-dark fs-6">Country</label>
 
                                 <select class="form-select form-select-solid" data-control="select2" data-placeholder="Select an option" id="CountryId" name="CountryId">
@@ -125,6 +137,16 @@
                                     {
                                         <option value="@country.Id">@country?.CountryName</option>
                                     }
+                                </select>
+                            </div>
+                            <!--end::Col-->
+                            <!--begin::Col-->
+                            <div class="col-xl-6">
+
+                                <label class="form-label fw-bolder text-dark fs-6">City</label>
+                                <select class="form-select form-select-solid" data-control="select2" data-placeholder="Select an option" id="userCity" name="userCity">
+                                    <option>Select City</option>
+
                                 </select>
 
                             </div>
@@ -217,7 +239,34 @@
 
         "use strict"; var KTSignupGeneral = function () { var e, t, a, s, r = function () { return 100 === s.getScore() }; return { init: function () { e = document.querySelector("#kt_sign_up_form"), t = document.querySelector("kt_sign_up_submit"), s = KTPasswordMeter.getInstance(e.querySelector('[data-kt-password-meter="true"]')), a = FormValidation.formValidation(e, { fields: { "Name": { validators: { notEmpty: { message: "Name Field is required" } } }, "PhoneNumber": { validators: { notEmpty: { message: "Phone Number Field is required" } } }, Email: { validators: { notEmpty: { message: "Email address is required" }, emailAddress: { message: "The value is not a valid email address" } } }, Password: { validators: { notEmpty: { message: "The password is required" }, callback: { message: "Please enter valid password", callback: function (e) { if (e.value.length > 0) return r() } } } }, "ConfirmPassword": { validators: { notEmpty: { message: "The password confirmation is required" }, identical: { compare: function () { return e.querySelector('[name="Password"]').value }, message: "The password and its confirm are not the same" } } } }, plugins: { trigger: new FormValidation.plugins.Trigger({ event: { password: !1 } }), bootstrap: new FormValidation.plugins.Bootstrap5({ rowSelector: ".fv-row", eleInvalidClass: "", eleValidClass: "" }) } }), e.querySelector('input[name="Password"]').addEventListener("input", (function () { this.value.length > 0 && a.updateFieldStatus("Password", "NotValidated") })) } } }(); KTUtil.onDOMContentLoaded((function () { KTSignupGeneral.init() }));
 
+       
+        
+
+
+
     </script>
+    <script>
+        $(document).ready(function() {
+            $("#CountryId").change(function () {
+                var _countryId = $(this).val();
+                $("#userCity").empty();
+                $.get("/MasterData/CityInfo/CityLoadByCountryId", { countryId: _countryId }, function (data) {
+
+                    console.log(data);
+
+                    var option = "<option>---Select---</option>";
+                    $.each(data, function (i,_data) {
+                        option += "<option value="+_data.id+">"+_data.cityName+"</option>";
+                    });
+                    $("#userCity").html(option);
+                });
+            });
+        })
+
+        $("#dateOfBirth").flatpickr();
+    </script>
+
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

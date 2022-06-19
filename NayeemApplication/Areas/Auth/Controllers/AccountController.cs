@@ -34,6 +34,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
         public readonly IWebHostEnvironment _environment;
         public readonly ICountryService _countryService;
         public readonly ICityService _cityService;
+        public readonly IUserServiceSP _userServiceSP;
 
         public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -48,7 +49,8 @@ namespace NayeemApplication.Areas.Auth.Controllers
             IHttpContextAccessor httpContextAccessor,
             IWebHostEnvironment environment,
             ICountryService countryService,
-            ICityService cityService
+            ICityService cityService,
+            IUserServiceSP userServiceSP
         )
         {
             _userManager = userManager;
@@ -65,6 +67,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
             _environment = environment;
             _countryService = countryService;
             _cityService = cityService;
+            _userServiceSP = userServiceSP;
         }
 
 
@@ -90,37 +93,89 @@ namespace NayeemApplication.Areas.Auth.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
             ViewBag.Countries = await _countryService.GetAllCountrysAsync();
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser
-                {
-                    UserName = model.Email,
-                    Email = model.Email,
-                    TwoFactorEnabled = false,
-                    PhoneNumber = model.PhoneNumber,
-                };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    ApplicationUser CurrentUser = await userInfoes.GetUserInfoByEmailAsync(model.Email);
+            
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    //bool response = await _mailService.SendTextEmailAsync(model.Email, "Confirm your account", $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>Click Here</a>");
-                    bool response = await _mailService.SendTextEmailAsync(model.Email, "Confirm your account", $"Please confirm your account by clicking this link: <a style='display: inline-block;background-color: #008000;color: #FFFFFF;padding: 14px 25px;text-align: center;text-decoration: none;font-size: 16px;margin-left: 20px;opacity: 0.9' href='{callbackUrl}'>Click Here</a>");
-                    if (response)
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    string userImageUrl = "/DefaultImage/NoImage.png";
+                    string imageFileUrl;
+                    string userPhotoUploadSuccessMsg = FileSave.SaveImage(out imageFileUrl, model.UploadUserPhoto);
+
+                    if (userPhotoUploadSuccessMsg == "success")
                     {
-                        _logger.LogInformation(1, "User created a new account with password.");
-                        return RedirectToAction(nameof(EmailSuccess), new { area = "Auth", ReturnUrl = returnUrl });
+                        userImageUrl = "";
+                        userImageUrl = imageFileUrl;
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Invalid Email to Send");
                         return View(model);
                     }
+
+
+                    string userCvUrl = "/DefaultImage/nofile.png";
+                    string cvFileUrl;
+                    string userCvUploadSuccessMsg = FileSave.SaveCV(out cvFileUrl, model.UploadUserCV);
+                    if (userCvUploadSuccessMsg=="success")
+                    {
+                        userCvUrl = "";
+                        userCvUrl=cvFileUrl;
+                    }
+                    else
+                    {
+                        return View(model);
+                    }
+
+                    var user = new ApplicationUser
+                    {
+                        UserName = model.FirstName+"_"+model.LastName,
+                        Email = model.Email,
+                        TwoFactorEnabled = false,
+                        PhoneNumber = model.PhoneNumber,
+                        userCity=model.userCity,
+                        dob = model.dateOfBirth,
+                        userImg =userImageUrl,
+                        userCV = cvFileUrl,
+
+                    };
+
+
+
+
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        ApplicationUser CurrentUser = await _userServiceSP.GetUserInfoByEmailAsync(model.Email);
+
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+ 
+                        bool response = await _mailService.SendTextEmailAsync(model.Email, "Confirm your account", $"Please confirm your account by clicking this link: <a style='display: inline-block;background-color: #008000;color: #FFFFFF;padding: 14px 25px;text-align: center;text-decoration: none;font-size: 16px;margin-left: 20px;opacity: 0.9' href='{callbackUrl}'>Click Here</a>");
+                        if (response)
+                        {
+                            _logger.LogInformation(1, "User created a new account with password.");
+                            return RedirectToAction(nameof(EmailSuccess), new { area = "Auth", ReturnUrl = returnUrl });
+                        }
+                        else
+                        {
+                            //ModelState.AddModelError(string.Empty, "Invalid Email to Send");
+                            return View(model);
+                        }
+                    }
+                    AddErrors(result);
                 }
-                AddErrors(result);
             }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+
             return View(model);
         }
 
@@ -150,10 +205,10 @@ namespace NayeemApplication.Areas.Auth.Controllers
                 ApplicationUser userInfo = new ApplicationUser();
                 if (model != null)
                 {
-                    userInfo = await userInfoes.GetUserInfoByUser(model.Name);
+                    userInfo = await _userServiceSP.GetUserInfoByUser(model.Name);
                     if (userInfo == null)
                     {
-                        userInfo = await userInfoes.GetUserInfoByEmailAsync(model.Name);
+                        userInfo = await _userServiceSP.GetUserInfoByEmailAsync(model.Name);
                         model.Name = userInfo?.UserName;
                     }
                 }
@@ -164,17 +219,10 @@ namespace NayeemApplication.Areas.Auth.Controllers
                     if (userInfo.isActive == true)
                     {
                         var result = await _signInManager.PasswordSignInAsync(model.Name, model.Password, model.RememberMe, lockoutOnFailure: false);
-                        //return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
-
 
                         if (result.Succeeded)
                         {
                             _logger.LogInformation(1, "User logged in.");
-                            var ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-                            var userAgent = Request.Headers["User-Agent"].ToString();
-                            var mechineName = Environment.MachineName;
-                            var rip = Dns.GetHostEntry(HttpContext.Connection.RemoteIpAddress.ToString()).ToString();
-
                             var userRole = await userInfoes.GetUserRoleByUserName(model.Name);
 
                             if (userRole == "Super Admin")
@@ -242,12 +290,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-
-            var ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            var userAgent = Request.Headers["User-Agent"].ToString();
-            var mechineName = Environment.MachineName;
-            var rip = Dns.GetHostEntry(HttpContext.Connection.RemoteIpAddress.ToString()).ToString();
-           var userInfo = await userInfoes.GetUserInfoByUser(User.Identity.Name);
+           var userInfo = await _userServiceSP.GetUserInfoByUser(User.Identity.Name);
             await _signInManager.SignOutAsync();
             return Redirect("/Home/Index");
 

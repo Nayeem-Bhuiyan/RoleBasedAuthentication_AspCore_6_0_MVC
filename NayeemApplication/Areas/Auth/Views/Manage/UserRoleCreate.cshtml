@@ -2,168 +2,169 @@
 @using NayeemApplication.Services.AuthService.Interfaces
 @using System
 @inject IUserInfoes userInfo
+@inject IUserServiceSP userServiceSP
 
 @{
     ViewData["Title"] = "UserRoleCreate";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var userInfos = await userInfo.GetUserInfoByUser(User.Identity.Name);
+    var userInfos = await userServiceSP.GetUserInfoByUser(User.Identity.Name);
     var roleName = await userInfo.GetUserRoleByByUserId(userInfos.Id);
 }
 
 
 @if (roleName == "Super Admin")
 {
-        <!--begin::Toolbar-->
-        <div class="toolbar" id="kt_toolbar">
-            <div class="container-fluid d-flex flex-stack flex-wrap flex-sm-nowrap">
-                <!--begin::Info-->
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar">
+        <div class="container-fluid d-flex flex-stack flex-wrap flex-sm-nowrap">
+            <!--begin::Info-->
             <div class="d-flex flex-column align-items-start justify-content-center flex-wrap me-2">
-                    <!--begin::Title-->
+                <!--begin::Title-->
                 <h1 class="text-dark fw-bolder my-1 fs-2">
-                        User Roles
-                        <small class="text-muted fs-6 fw-normal ms-1"></small>
-                    </h1>
-                    <!--end::Title-->
-                    <!--begin::Breadcrumb-->
+                    User Roles
+                    <small class="text-muted fs-6 fw-normal ms-1"></small>
+                </h1>
+                <!--end::Title-->
+                <!--begin::Breadcrumb-->
                 <ul class="breadcrumb fw-bold fs-base my-1">
-                        <li class="breadcrumb-item text-muted">
-                            <a href="/Home/Index" class="text-muted text-hover-primary">Home</a>
-                        </li>
-                        <li class="breadcrumb-item text-muted">Dashboards</li>
-                        <li class="breadcrumb-item text-dark">Index</li>
-                    </ul>
-                    <!--end::Breadcrumb-->
+                    <li class="breadcrumb-item text-muted">
+                        <a href="/Home/Index" class="text-muted text-hover-primary">Home</a>
+                    </li>
+                    <li class="breadcrumb-item text-muted">Dashboards</li>
+                    <li class="breadcrumb-item text-dark">Index</li>
+                </ul>
+                <!--end::Breadcrumb-->
             </div>
-                <!--end::Info-->
-                <!--begin::Actions-->
+            <!--end::Info-->
+            <!--begin::Actions-->
             <div class="d-flex align-items-center flex-nowrap text-nowrap py-1">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddRoleModal">
-                        Create Role
-                    </button>
-                </div>
-                <!--end::Actions-->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddRoleModal">
+                    Create Role
+                </button>
+            </div>
+            <!--end::Actions-->
         </div>
-        </div>
-        <!--end::Toolbar-->
-        <!--begin::Post-->
-        <div class="post fs-6 d-flex flex-column-fluid" id="kt_post">
-            <!--begin::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post fs-6 d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
         <div class="container-xxl">
-                <!--begin::Row-->
+            <!--begin::Row-->
             <div class="row g-xl-12">
-                    <!--begin::Col-->
+                <!--begin::Col-->
                 <div class="col-xxl-12">
-                        <!--begin::Row-->
+                    <!--begin::Row-->
                     <div class="row g-xl-12">
-                            <!--begin::Col-->
+                        <!--begin::Col-->
                         <div class="col-xl-12">
-                                <!--begin::Chart Widget 1-->
+                            <!--begin::Chart Widget 1-->
                             <div class="card card-xl-stretch mb-5 mb-xl-8">
-                                    <!--begin::Body-->
+                                <!--begin::Body-->
                                 <div class="card-body p-0 d-flex justify-content-between flex-column">
 
 
 
 
 
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="table-responsive p-5">
-                                                    <table id="tblData" class="table table-striped table-row-bordered gy-5 gs-7 border rounded">
-                                                        <thead class="text-center">
-                                                            <tr class="fw-bolder fs-6 text-gray-800 px-7">
-                                                                <th>Role Name</th>
-                                                                <th>Action</th>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="table-responsive p-5">
+                                                <table id="tblData" class="table table-striped table-row-bordered gy-5 gs-7 border rounded">
+                                                    <thead class="text-center">
+                                                        <tr class="fw-bolder fs-6 text-gray-800 px-7">
+                                                            <th>Role Name</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="fw-bold text-gray-600">
+                                                        @foreach (var data in Model.roleViewModels)
+                                                        {
+                                                            <tr>
+                                                                <td>@data.RoleName</td>
+                                                                <td>
+                                                                    <a class="btn btn-success btn-sm" title="Edit Role" onclick="Edit('@data.RoleId', '@data.RoleName')" href="#"><i class="fa fa-edit"></i></a>
+                                                                    <a class="btn btn-danger btn-sm" title="Delete Role" onclick="Delete('@data.RoleId')" href="javascript:void(0)"><i class="fa fa-trash"></i></a>
+                                                                </td>
                                                             </tr>
-                                                        </thead>
-                                                        <tbody class="fw-bold text-gray-600">
-                                                            @foreach (var data in Model.roleViewModels)
-                                                            {
-                                                                <tr>
-                                                                    <td>@data.RoleName</td>
-                                                                    <td>
-                                                                        <a class="btn btn-success btn-sm" title="Edit Role" onclick="Edit('@data.RoleId', '@data.RoleName')" href="#"><i class="fa fa-edit"></i></a>
-                                                                        <a class="btn btn-danger btn-sm" title="Delete Role" onclick="Delete('@data.RoleId')" href="javascript:void(0)"><i class="fa fa-trash"></i></a>
-                                                                    </td>
-                                                                </tr>
-                                                            }
+                                                        }
 
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!--end::Chart Widget 1-->
+                            </div>
+                            <!--end::Chart Widget 1-->
                         </div>
-                            <!--end::Col-->
+                        <!--end::Col-->
                     </div>
-                        <!--end::Row-->
+                    <!--end::Row-->
                 </div>
-                    <!--end::Col-->
+                <!--end::Col-->
             </div>
-                <!--end::Row-->
+            <!--end::Row-->
         </div>
-            <!--end::Container-->
+        <!--end::Container-->
     </div>
 
 
-        <!--end::Post-->
+    <!--end::Post-->
 
 }
 else
 {
 
-        <!--begin::Post-->
-        <div class="post fs-6 d-flex flex-column-fluid" id="kt_post">
-            <!--begin::Container-->
+    <!--begin::Post-->
+    <div class="post fs-6 d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
         <div class="container-xxl">
-                <!--begin::Row-->
+            <!--begin::Row-->
             <div class="row g-xl-12">
-                    <!--begin::Col-->
+                <!--begin::Col-->
                 <div class="col-xxl-12">
-                        <!--begin::Row-->
+                    <!--begin::Row-->
                     <div class="row g-xl-12">
-                            <!--begin::Col-->
+                        <!--begin::Col-->
                         <div class="col-xl-12">
-                                <!--begin::Chart Widget 1-->
+                            <!--begin::Chart Widget 1-->
                             <div class="card card-xl-stretch mb-5 mb-xl-8">
-                                    <!--begin::Body-->
+                                <!--begin::Body-->
                                 <div class="card-body p-0 d-flex justify-content-between flex-column">
-                                        <!--begin::Main-->
+                                    <!--begin::Main-->
                                     <div class="d-flex flex-column flex-root">
-                                            <!--begin::Authentication - 404 Page-->
+                                        <!--begin::Authentication - 404 Page-->
                                         <div class="d-flex flex-column flex-center flex-column-fluid p-10">
-                                                <!--begin::Illustration-->
+                                            <!--begin::Illustration-->
                                             <img src="/assets/media/illustrations/sigma-1/18.png" alt="" class="mw-100 mb-10 h-lg-450px" />
-                                                <!--end::Illustration-->
-                                                <!--begin::Message-->
+                                            <!--end::Illustration-->
+                                            <!--begin::Message-->
                                             <h1 class="fw-bold mb-10" style="color: #A3A3C7">Access Denied</h1>
-                                                <!--end::Message-->
-                                                <!--begin::Link-->
+                                            <!--end::Message-->
+                                            <!--begin::Link-->
                                             <a href="/" class="btn btn-primary">Return Home</a>
-                                                <!--end::Link-->
+                                            <!--end::Link-->
                                         </div>
-                                            <!--end::Authentication - 404 Page-->
+                                        <!--end::Authentication - 404 Page-->
                                     </div>
-                                        <!--end::Main-->
+                                    <!--end::Main-->
                                 </div>
-                                </div>
-                                <!--end::Chart Widget 1-->
+                            </div>
+                            <!--end::Chart Widget 1-->
                         </div>
-                            <!--end::Col-->
+                        <!--end::Col-->
                     </div>
-                        <!--end::Row-->
+                    <!--end::Row-->
                 </div>
-                    <!--end::Col-->
+                <!--end::Col-->
             </div>
-                <!--end::Row-->
+            <!--end::Row-->
         </div>
-            <!--end::Container-->
+        <!--end::Container-->
     </div>
-        <!--end::Post-->
+    <!--end::Post-->
 
 
 }

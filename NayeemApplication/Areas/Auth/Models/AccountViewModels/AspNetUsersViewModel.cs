@@ -1,4 +1,6 @@
-﻿namespace NayeemApplication.Areas.Auth.Models.AccountViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NayeemApplication.Areas.Auth.Models.AccountViewModels
 {
     public class AspNetUsersViewModel
     {
@@ -19,10 +21,27 @@
         public int? photoId { get; set; }
         public string roleId { get; set; }
         public string roleName{ get; set; }
-        public string imageUrl { get; set; }
+        [DataType(DataType.ImageUrl)]
+        [Display(Name = "Image ")]
+        [StringLength(300, ErrorMessage = "")]
+        [Required]
+        public string userImg { get; set; }
+        [DataType(DataType.Url)]
+        [Display(Name = "CV Upload")]
+        [StringLength(300, ErrorMessage = "")]
+        [Required]
+        public string userCV { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [Display(Name = "Date Of Birth")]
+        public DateTime dob { get; set; }
+        [RegularExpression("([0-9]+)")]
+        public int userCity { get; set; }
 
 
 
 
-	}
+
+    }
 }

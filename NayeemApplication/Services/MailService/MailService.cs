@@ -108,7 +108,6 @@ namespace NayeemApplication.Services.MailService
             {
                 var email = new MimeMessage();
                 email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-                email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
                 email.To.Add(MailboxAddress.Parse(ToEmail));
                 email.Subject = Subject;
                 var builder = new BodyBuilder();

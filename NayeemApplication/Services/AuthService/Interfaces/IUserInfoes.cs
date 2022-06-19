@@ -5,11 +5,10 @@ namespace NayeemApplication.Services.AuthService.Interfaces
 {
     public interface IUserInfoes
     {
-        Task<ApplicationUser> GetUserInfoByUser(string userName);
-        Task<ApplicationUser> GetUserInfoByUserPhoneNumber(string phoneNumber);
-        Task<ApplicationUser> GetUserInfoByEmailAsync(string email);
-        Task<bool> DeleteRoleById(string Id);
+
         Task<string> GetUserRoleByUserName(string userName);
+        Task<ApplicationUser> GetUserInfoByUserPhoneNumber(string phoneNumber);
+        Task<bool> DeleteRoleById(string Id);
         Task<string> CheckUserName(string uname);
         Task<string> CheckEmail(string email);
         Task<string> CheckPhone(string phoneNumber);

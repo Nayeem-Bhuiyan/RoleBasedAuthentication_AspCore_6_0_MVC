@@ -1,9 +1,11 @@
 ﻿using NayeemApplication.Data.Entity.MasterDataEntity;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using NayeemApplication.Services.CityService.Interface;
+
 namespace NayeemApplication.Services.CityService
 {
-    public class CityService
+    public class CityService: ICityService
     {
         private readonly string _connectionString;
 
@@ -46,6 +48,7 @@ namespace NayeemApplication.Services.CityService
             {
                 Id =Convert.ToInt32(reader["Id"].ToString()),
                 cityName = reader["cityName"].ToString(),
+                CountryId =Convert.ToInt32(reader["CountryId"].ToString()),
             };
         }
     }

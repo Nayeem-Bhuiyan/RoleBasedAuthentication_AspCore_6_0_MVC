@@ -68,4 +68,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\MasterData\Data\" />
+    <Folder Include="Areas\MasterData\Models\" />
+    <Folder Include="Areas\MasterData\Views\" />
+    <Folder Include="wwwroot\UsersCV\" />
+    <Folder Include="wwwroot\UsersPhoto\" />
+  </ItemGroup>
+
 </Project>

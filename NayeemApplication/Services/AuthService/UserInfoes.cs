@@ -1,9 +1,9 @@
 ﻿using NayeemApplication.Services.AuthService.Interfaces;
 using NayeemApplication.Data;
-//using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NayeemApplication.Data.Entity.ApplicationUsersEntity;
 using NayeemApplication.Areas.Auth.Models.AccountViewModels;
-
+using System.Data;
 namespace NayeemApplication.Services.AuthService
 {
     public class UserInfoes: IUserInfoes
@@ -14,19 +14,26 @@ namespace NayeemApplication.Services.AuthService
             _context = context;
         }
 
-        public async Task<ApplicationUser> GetUserInfoByUser(string userName)
+        public async Task<string> GetUserRoleByUserName(string userName)
         {
-            return await _context.Users.Where(x => x.UserName == userName).AsNoTracking().FirstOrDefaultAsync();
+            var name = "";
+            var user = await _context.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
+            var userRole = await _context.UserRoles.Where(x => x.UserId == user.Id).FirstOrDefaultAsync();
+            if (userRole != null)
+            {
+                var role = await _context.Roles.Where(x => x.Id == userRole.RoleId).FirstOrDefaultAsync();
+                name = role?.Name;
+            }
+            else { name = "no roles assingn"; }
+            return name;
         }
 
         public async Task<ApplicationUser> GetUserInfoByUserPhoneNumber(string phoneNumber)
         {
             return await _context.Users.Where(x => x.PhoneNumber == phoneNumber).AsNoTracking().FirstOrDefaultAsync();
         }
-        public async Task<ApplicationUser> GetUserInfoByEmailAsync(string email)
-        {
-            return await _context.Users.Where(x => x.Email == email).AsNoTracking().FirstOrDefaultAsync();
-        }
+
+
         public async Task<IEnumerable<ApplicationUser>> GetUsers()
         {
             return await _context.Users.AsNoTracking().ToListAsync();
@@ -59,18 +66,7 @@ namespace NayeemApplication.Services.AuthService
             return 1 == await _context.SaveChangesAsync();
         }
 
-        public async Task<string> GetUserRoleByUserName(string userName)
-        {
-            var name = "";
-            var user = await _context.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
-            var userRole= await _context.UserRoles.Where(x => x.UserId == user.Id).FirstOrDefaultAsync();
-            if (userRole != null) {
-                var role = await _context.Roles.Where(x => x.Id == userRole.RoleId).FirstOrDefaultAsync();
-                name = role?.Name;
-            }
-            else { name = "no roles assingn"; }
-            return name;
-        }
+       
 
         public async Task<string> GetUserRoleByByUserId(string userId)
         {

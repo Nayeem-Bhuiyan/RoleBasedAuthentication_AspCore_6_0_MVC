@@ -12,6 +12,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using NayeemApplication.Services.CityService.Interface;
+using NayeemApplication.Services.CityService;
+using NayeemApplication.Services.CountryService.Interface;
+using NayeemApplication.Services.CountryService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -114,6 +118,13 @@ builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryServic
 
 #region UserService
 builder.Services.AddScoped<IUserInfoes, UserInfoes>();
+builder.Services.AddScoped<IUserServiceSP,UserServiceSP>();
+#endregion
+
+
+#region MasterData
+builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddScoped<ICityService, CityService>();
 #endregion
 
 #region MailService
