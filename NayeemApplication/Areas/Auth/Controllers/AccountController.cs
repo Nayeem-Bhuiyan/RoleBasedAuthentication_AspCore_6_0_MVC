@@ -153,7 +153,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
  
-                        bool response = await _mailService.SendTextEmailAsync(model.Email, "Confirm your account", $"Please confirm your account by clicking this link: <a style='display: inline-block;background-color: #008000;color: #FFFFFF;padding: 14px 25px;text-align: center;text-decoration: none;font-size: 16px;margin-left: 20px;opacity: 0.9' href='{callbackUrl}'>Click Here</a>");
+                        bool response = await _emailService.SendEmailAsync(model.Email, "Confirm your account", $"Please confirm your account by clicking this link: <a style='display: inline-block;background-color: #008000;color: #FFFFFF;padding: 14px 25px;text-align: center;text-decoration: none;font-size: 16px;margin-left: 20px;opacity: 0.9' href='{callbackUrl}'>Click Here</a>");
                         if (response)
                         {
                             _logger.LogInformation(1, "User created a new account with password.");

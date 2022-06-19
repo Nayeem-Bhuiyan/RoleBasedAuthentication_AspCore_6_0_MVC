@@ -14,26 +14,36 @@ namespace NayeemApplication.Services.MailService
             _mailSettings = mailSettings.Value;
         }
 
-        public async Task SendEmailAsync(string toAddr, string subject, string body)
+        public async Task<bool> SendEmailAsync(string toAddr, string subject, string body)
         {
-            var fromAddress = new MailAddress(_mailSettings.Mail,_mailSettings.DisplayName);
-            var toAddress = new MailAddress(toAddr);
-            var smtp = new SmtpClient
+            try
             {
-                Host = _mailSettings.Host,
-                Port = _mailSettings.Port,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(fromAddress.Address,_mailSettings.Password)
-            };
-            using (var message = new MailMessage(fromAddress, toAddress)
+                var fromAddress = new MailAddress(_mailSettings.Mail, _mailSettings.DisplayName);
+                var toAddress = new MailAddress(toAddr);
+                var smtp = new SmtpClient
+                {
+                    Host = _mailSettings.Host,
+                    Port = _mailSettings.Port,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, _mailSettings.Password)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body
+                })
+                {
+                    await smtp.SendMailAsync(message);
+                }
+
+                return true;
+            }
+            catch (Exception)
             {
-                Subject = subject,
-                Body = body
-            })
-            {
-                await smtp.SendMailAsync(message);
+
+                return false;
             }
         }
     }
