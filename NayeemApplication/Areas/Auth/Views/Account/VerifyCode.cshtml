@@ -1,0 +1,43 @@
+﻿@model VerifyCodeViewModel
+@{
+    ViewData["Title"] = "VerifyCode";
+    Layout = "~/Areas/Auth/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 border p-4 shadow bg-light">
+            <div class="col-12">
+                <h3 class="fw-normal text-secondary fs-4 text-uppercase mb-4">@ViewData["Title"]</h3>
+            </div>
+            <form asp-controller="Account" asp-action="VerifyCode" asp-route-returnurl="@Model.ReturnUrl" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input asp-for="Provider" type="hidden" />
+                <input asp-for="RememberMe" type="hidden" />
+                @ViewData["Status"]
+                <div class="row g-3">
+                    <div class="col-12">
+                        <input asp-for="Code" class="form-control" placeholder="Enter Code"/>
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div> 
+                    <div class="col-12">
+                        <div class="checkbox">
+                            <input asp-for="RememberBrowser" />
+                            <label asp-for="RememberBrowser"></label>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-5">
+                        <button type="submit" class="btn btn-primary float-end">Create</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
