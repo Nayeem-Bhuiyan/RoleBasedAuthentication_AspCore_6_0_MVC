@@ -325,7 +325,6 @@ namespace NayeemApplication.Areas.Auth.Controllers
 
             ApplicationUser user = await _userManager.FindByEmailAsync(model.Email);
 
-            await _userManager.UpdateAsync(user);
 
             if (model.PreRoleId != null)
             {
