@@ -384,24 +384,31 @@ else
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <select class="form-select" aria-label="Select example" name="CityId" id="CityId">
-                                        <option value="0" selected="selected">Select City</option>
-                                        @foreach (var data in Model.Cities)
-                                        {
-                                            <option value="@data?.Id">@data?.cityName</option>
-                                        }
-                                    </select>
-                                </div>
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Country</span>
+                                        <select class="form-select" aria-label="Select example" name="userCountryId" id="userCountryId">
+                                            <option value="0" selected="selected">Select Country</option>
+                                            @foreach (var data in Model.Countries)
+                                            {
+                                                <option value="@data?.Id">@data?.CountryName</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    </div>
                                 <div class="col-md-6">
-                                    <select class="form-select" aria-label="Select example" name="CountryId" id="CountryId">
-                                        <option value="0" selected="selected">Select Country</option>
-                                        @foreach (var data in Model.Countries)
-                                        {
-                                            <option value="@data?.Id">@data?.CountryName</option>
-                                        }
-                                    </select>
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">City</span>
+                                        <select class="form-select" aria-label="Select example" name="userCityId" id="userCityId">
+                                            <option value="0" selected="selected">Select City</option>
+                                            @foreach (var data in Model.Cities)
+                                            {
+                                                <option value="@data?.Id">@data?.cityName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    </div>
                                 </div>
-                            </div>
                             <div class="input-group mb-5"></div>
                             <!--begin::Actions-->
                             <div class="text-lg-end pt-15">
@@ -489,15 +496,15 @@ else
             });
 
 
-            $("#CountryId").change(function () {
+            $("#userCountryId").change(function () {
                 var _countryId = $(this).val();
-                $("#CityId").empty();
+                $("#userCityId").empty();
                 $.get("/MasterData/CityInfo/CityLoadByCountryId", { countryId: _countryId }, function (data) {
                     var option = "<option>---Select---</option>";
                     $.each(data, function (i, _data) {
                         option += "<option value=" + _data.id + ">" + _data.cityName + "</option>";
                     });
-                    $("#CityId").html(option);
+                    $("#userCityId").html(option);
                 });
             });
 
@@ -692,8 +699,8 @@ else
             $("#PreRoleId").val(roleName);
             $("#RoleId").val(roleName);
             $("#email").val(Email);
-            $("#CountryId").val(userCountryId);
-            $("#CityId").val(userCityId);
+            $("#userCountryId").val(userCountryId);
+            $("#userCityId").val(userCityId);
             $("#FirstName").val(FirstName);
             $("#LastName").val(LastName);
             $("#mobileNo").val(mobileNo);

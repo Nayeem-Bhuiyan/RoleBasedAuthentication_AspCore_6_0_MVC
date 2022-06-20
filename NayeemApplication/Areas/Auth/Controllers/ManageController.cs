@@ -258,9 +258,6 @@ namespace NayeemApplication.Areas.Auth.Controllers
             if (model.PreRoleId != null)
             {
                 await _userManager.RemoveFromRoleAsync(user, model.PreRoleId);
-
-
-
             }
             IdentityResult response= await _userManager.AddToRoleAsync(user, model.RoleId);
             if (response.Succeeded)
