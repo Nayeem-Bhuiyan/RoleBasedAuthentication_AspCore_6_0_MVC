@@ -61,27 +61,37 @@
                                         <table id="tblUserList"  class="table table-striped table-row-bordered gy-5 gs-7 border rounded">
                                             <thead>
                                                 <tr class="fw-bolder fs-6 text-gray-800 px-7">
-                                                    <th>User Name</th>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
                                                     <th>Country</th>
                                                     <th>City</th>
-                                                    <th>Photo</th>
-                                                    <th>CV</th>
                                                     <th>Email</th>
                                                     <th>Roles</th>
+                                                    <th>Photo</th>
+                                                    <th>CV Download</th>
+                                                    <th>Read CV</th>
+
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="fw-bold text-gray-600">
                                                 @foreach (var data in Model.aspNetUsersViewModels)
                                                 {
+                                                    var userName = data.UserName;
                                                 <tr>
-                                                    <td>@data.UserName</td>
+                                                    
+
+
+                                                    <td>@data.UserName.Substring(0, userName.IndexOf("_"))</td>
+                                                    <td>@data.UserName.Substring(userName.IndexOf("_")+1)</td>
                                                     <td>@data.userCountryName</td>
                                                     <td>@data.userCityName</td>
-                                                    <td><img src="/@data.userImg" alt="Alternate Text" height="50" width="50" /></td>
-                                                    <td><a href="/@data.userCV">User CV</a></td>
                                                     <td>@data.Email</td>
                                                     <td>@data.roleName</td>
+                                                    <td><img src="/UsersPhoto/@data.userImg" alt="Alternate Text" height="50" width="50" /></td>
+                                                    <td><a href="/UsersCV/@data.userCV">User CV</a></td>
+                                                    <td><a href="#" onclick="ShowPdf('@data.userCV')">Read CV</a></td>
+
                                                     <td class="text-nowrap">
                                                         <a class="btn btn-info btn-sm" title="Edit" onclick="Edit('@data.aspnetId','@data.UserName','@data.Email','@data.roleName','@data.roleId',@data.userCountryId,@data.userCityId,'@data.userImg','@data.userCV','@data.mobileNo','@data.DateOfBirth')" href="javascript:void(0)"><i class="bi bi-pencil-square"></i></a>
                                                         <a class="btn btn-success btn-sm" title="Reset Password" onclick="SetUserInfo('@data.UserName','@data.aspnetId')" href="#" data-bs-toggle="modal" data-bs-target="#resetPasswordModal"><i class="bi bi-arrow-repeat"></i></a>
@@ -287,6 +297,19 @@ else
             <!--end::Modal header-->
             <!--begin::Modal body-->
             <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="d-xl-flex d-inline-block">
+
+
+                            <img src="" id="userImageShow" name="userImageShow" alt="Alternate Text" />
+                            
+                        </div>
+                    </div>
+                </div>
+                
+
                 <!--begin::Form-->
                 <form id="frmData" class="form" method="post">
                     <div asp-validation-summary="All" class="text-danger"></div>
@@ -303,11 +326,10 @@ else
                     </div>
                     <div class="input-group mb-5">
                         <span class="input-group-text">User Photo</span>
-                        <img src="" id="userImageShow" name="userImageShow" alt="Alternate Text" />
+
                         <input type="text" class="form-control" name="email" id="email" placeholder="Email" aria-label="email" aria-describedby="email" readonly />
 
-                        @*<span class="input-group-text">User CV</span>*@
-                        <a class="input-group-text" href="" id="previousUserCV">User CV</a>
+                        <span class="input-group-text">Upload CV</span>
                         <input type="file" class="form-control d-none" name="email" id="email" placeholder="Email" aria-label="email" aria-describedby="email" readonly />
                     </div>
                     <div class="input-group mb-5">
@@ -357,6 +379,44 @@ else
     </div>
     <!--end::Modal dialog-->
 </div>
+
+
+<div class="modal fade" id="ShowPdfModal" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered min-w-xl-1000px">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header">
+                <!--begin::Modal title-->
+                <h3 class="fw-boldest text-dark fs-1 mb-0">Read Your Cv Info</h3>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                    <span class="svg-icon svg-icon-2x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </div>
+                <!--end::Close-->
+            </div>
+            <!--end::Modal header-->
+            <!--begin::Modal body-->
+            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                <embed id="CurrentUserCV" src="" type="application/pdf" width="800" height="400" allowfullscreen="true"/>
+            </div>
+            <!--end::Modal body-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+
+
 
 @section Scripts{
 
@@ -574,17 +634,18 @@ else
             $("#CountryId").val(userCountryId);
             $("#CityId").val(userCityId);
 
-           $("#userImageShow").attr("src", "/" + userImg.substring(0,10) + "/6" + userImg.substring(10));
-            $("#previousUserCV").attr("src", "/" + userCV.substring(0, 7) + "/6" + userCV.substring(7));
-
-           
-
-            
-    
-
+            $("#userImageShow").attr("src", "/UsersPhoto/" + userImg);
+            //$("#previousUserCV").attr("src", "/UsersCV/" + userCV +"#toolbar=0");
             $('#EditUserInfoModal').modal('show');
 
         }
+
+        function ShowPdf(userCV) {
+            $("#CurrentUserCV").attr("src", "/UsersCV/" + userCV +"#toolbar=0");
+            $('#ShowPdfModal').modal('show');
+        }
+
+
 
          function getAntiforgeryToken() {
             var token = '@Html.AntiForgeryToken()';
