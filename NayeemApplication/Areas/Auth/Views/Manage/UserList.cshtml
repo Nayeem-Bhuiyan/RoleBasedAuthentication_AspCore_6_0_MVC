@@ -78,12 +78,15 @@
                                                 @foreach (var data in Model.aspNetUsersViewModels)
                                                 {
                                                     var userName = data.UserName;
+                                                    var FirstName = data.UserName.Substring(0, userName.IndexOf("_"));
+                                                    var LastName = data.UserName.Substring(userName.IndexOf("_")+1);
+                                                    var dob = data.DateOfBirth.Value.ToString("MM/dd/yyyy");
                                                 <tr>
                                                     
 
 
-                                                    <td>@data.UserName.Substring(0, userName.IndexOf("_"))</td>
-                                                    <td>@data.UserName.Substring(userName.IndexOf("_")+1)</td>
+                                                    <td>@FirstName</td>
+                                                    <td>@LastName</td>
                                                     <td>@data.userCountryName</td>
                                                     <td>@data.userCityName</td>
                                                     <td>@data.Email</td>
@@ -93,7 +96,7 @@
                                                     <td><a href="#" onclick="ShowPdf('@data.userCV')">Read CV</a></td>
 
                                                     <td class="text-nowrap">
-                                                        <a class="btn btn-info btn-sm" title="Edit" onclick="Edit('@data.aspnetId','@data.UserName','@data.Email','@data.roleName','@data.roleId',@data.userCountryId,@data.userCityId,'@data.userImg','@data.userCV','@data.mobileNo','@data.DateOfBirth')" href="javascript:void(0)"><i class="bi bi-pencil-square"></i></a>
+                                                        <a class="btn btn-info btn-sm" title="Edit" onclick="Edit('@data.aspnetId','@FirstName','@LastName','@data.UserName','@data.Email','@data.roleName','@data.roleId',@data.userCountryId,@data.userCityId,'@data.userImg','@data.userCV','@data.mobileNo','@dob')" href="javascript:void(0)"><i class="bi bi-pencil-square"></i></a>
                                                         <a class="btn btn-success btn-sm" title="Reset Password" onclick="SetUserInfo('@data.UserName','@data.aspnetId')" href="#" data-bs-toggle="modal" data-bs-target="#resetPasswordModal"><i class="bi bi-arrow-repeat"></i></a>
                                                         <a class="btn btn-danger btn-sm" title="Delete User" onclick="Remove('@data.aspnetId','@data.UserName')" href="#"><i class="bi bi-trash"></i></a>
                                                         @if (data.isActive == true)
@@ -299,79 +302,123 @@ else
             <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
 
                 <div class="row">
-                    <div class="col-md-8">
-                        <div class="d-xl-flex d-inline-block">
-
-
+                    <div class="col-md-12">
+                        <div class="d-xl-flex d-inline-block justify-content-lg-start">
                             <img src="" id="userImageShow" name="userImageShow" alt="Alternate Text" />
-                            
                         </div>
                     </div>
                 </div>
-                
 
-                <!--begin::Form-->
-                <form id="frmData" class="form" method="post">
-                    <div asp-validation-summary="All" class="text-danger"></div>
-                    <input type="hidden" id="userId1" name="userId">
-                    <input type="hidden" id="PreRoleId" name="PreRoleId">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!--begin::Form-->
+                        <form id="frmData" class="form" method="post">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <input type="hidden" id="userId" name="userId">
+                            <input type="hidden" id="PreRoleId" name="PreRoleId">
 
-                    <div class="input-group mb-5">
-                        <span class="input-group-text required">User Name</span>
-                        <input type="text" class="form-control" name="userName" id="userName1" placeholder="User Name" aria-label="userName1" aria-describedby="userName1" readonly />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Email</span>
+                                        <input type="text" class="form-control" name="email" id="email" placeholder="Email" aria-label="email" aria-describedby="email" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Role</span>
+                                        <select class="form-select" aria-label="Select example" name="RoleId" id="RoleId">
+                                            <option value="0" selected="selected">Select User Role</option>
+                                            @foreach (var data in Model.userRoles)
+                                            {
+                                                <option value="@data.RoleName">@data.RoleName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text required">First Name</span>
+                                        <input type="text" class="form-control" name="FirstName" id="FirstName" placeholder="First Name" aria-label="FirstName" aria-describedby="FirstName" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Last Name</span>
+                                        <input type="text" class="form-control" name="LastName" id="LastName" placeholder="Last Name" aria-label="LastName" aria-describedby="LastName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Upload Photo</span>
+                                        <input type="file" class="form-control" name="userImg" id="userImg" aria-label="userImg" aria-describedby="userImg" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Upload CV</span>
+                                        <input type="file" class="form-control" name="userCV" id="userCV" aria-label="userCV" aria-describedby="userCV" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Date Of Birth</span>
+                                        <input type="text" class="form-control" placeholder="Date Of Birth" id="DateOfBirth" name="DateOfBirth" aria-label="DateOfBirth" aria-describedby="DateOfBirth" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Mobile</span>
+                                        <input type="text" class="form-control" placeholder="Mobile No" name="mobileNo" id="mobileNo" aria-label="mobileNo" aria-describedby="mobileNo" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-select" aria-label="Select example" name="CityId" id="CityId">
+                                        <option value="0" selected="selected">Select City</option>
+                                        @foreach (var data in Model.Cities)
+                                        {
+                                            <option value="@data?.Id">@data?.cityName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-select" aria-label="Select example" name="CountryId" id="CountryId">
+                                        <option value="0" selected="selected">Select Country</option>
+                                        @foreach (var data in Model.Countries)
+                                        {
+                                            <option value="@data?.Id">@data?.CountryName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="input-group mb-5"></div>
+                            <!--begin::Actions-->
+                            <div class="text-lg-end pt-15">
+                                <button type="reset" id="btnCancel" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" id="btnSave" class="btn btn-primary">
+                                    <span class="indicator-label">Submit</span>
+                                    <span class="indicator-progress">
+                                        Please wait...
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                    </span>
+                                </button>
+                            </div>
+                            <!--end::Actions-->
+                        </form>
+                        <!--end::Form-->
                     </div>
-                    <div class="input-group mb-5">
-                        <span class="input-group-text">Email</span>
-                        <input type="text" class="form-control" name="email" id="email" placeholder="Email" aria-label="email" aria-describedby="email" readonly />
-                    </div>
-                    <div class="input-group mb-5">
-                        <span class="input-group-text">User Photo</span>
-
-                        <input type="text" class="form-control" name="email" id="email" placeholder="Email" aria-label="email" aria-describedby="email" readonly />
-
-                        <span class="input-group-text">Upload CV</span>
-                        <input type="file" class="form-control d-none" name="email" id="email" placeholder="Email" aria-label="email" aria-describedby="email" readonly />
-                    </div>
-                    <div class="input-group mb-5">
-                        <span class="input-group-text">Role</span>
-                        <select class="form-select" aria-label="Select example" name="RoleId" id="RoleId">
-                            <option value="0" selected="selected">Select User Role</option>
-                            @foreach (var data in Model.userRoles)
-                            {
-                                <option value="@data.RoleName">@data.RoleName</option>
-                            }
-                        </select>
-
-                        <select class="form-select" aria-label="Select example" name="CountryId" id="CountryId">
-                            <option value="0" selected="selected">Select Country</option>
-                            @foreach (var data in Model.Countries)
-                            {
-                                <option value="@data?.Id">@data?.CountryName</option>
-                            }
-                        </select>
-
-                        <select class="form-select" aria-label="Select example" name="CityId" id="CityId">
-                            <option value="0" selected="selected">Select City</option>
-                            @foreach (var data in Model.Cities)
-                            {
-                                <option value="@data?.Id">@data?.cityName</option>
-                            }
-                        </select>
-                    </div>
-                    <!--begin::Actions-->
-                    <div class="text-center pt-15">
-                        <button type="reset" id="btnCancel" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="btnSave" class="btn btn-primary">
-                            <span class="indicator-label">Submit</span>
-                            <span class="indicator-progress">
-                                Please wait...
-                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                            </span>
-                        </button>
-                    </div>
-                    <!--end::Actions-->
-                </form>
-                <!--end::Form-->
+                </div>
             </div>
             <!--end::Modal body-->
         </div>
@@ -442,6 +489,20 @@ else
             });
 
 
+            $("#CountryId").change(function () {
+                var _countryId = $(this).val();
+                $("#CityId").empty();
+                $.get("/MasterData/CityInfo/CityLoadByCountryId", { countryId: _countryId }, function (data) {
+                    var option = "<option>---Select---</option>";
+                    $.each(data, function (i, _data) {
+                        option += "<option value=" + _data.id + ">" + _data.cityName + "</option>";
+                    });
+                    $("#CityId").html(option);
+                });
+            });
+
+
+            $("#DateOfBirth").flatpickr();
             //Reset Password Validation
 
             // Define form element
@@ -625,17 +686,21 @@ else
             $("#new_password").val("");
         }
 
-        function Edit(aspnetId,UserName,Email,roleName,roleId,userCountryId,userCityId,userImg,userCV,mobileNo,DateOfBirth) {
-            $("#userName1").val(UserName);
-            $("#userId1").val(aspnetId);
+        function Edit(aspnetId,FirstName,LastName,UserName,Email,roleName,roleId,userCountryId,userCityId,userImg,userCV,mobileNo,DateOfBirth) {
+            //$("#userName1").val(UserName);
+            $("#userId").val(aspnetId);
             $("#PreRoleId").val(roleName);
             $("#RoleId").val(roleName);
             $("#email").val(Email);
             $("#CountryId").val(userCountryId);
             $("#CityId").val(userCityId);
+            $("#FirstName").val(FirstName);
+            $("#LastName").val(LastName);
+            $("#mobileNo").val(mobileNo);
+            $("#DateOfBirth").val(DateOfBirth);
 
             $("#userImageShow").attr("src", "/UsersPhoto/" + userImg);
-            //$("#previousUserCV").attr("src", "/UsersCV/" + userCV +"#toolbar=0");
+
             $('#EditUserInfoModal').modal('show');
 
         }
