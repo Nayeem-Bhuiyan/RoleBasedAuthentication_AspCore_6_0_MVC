@@ -6,19 +6,13 @@ namespace NayeemApplication.Areas.Auth.Models.AccountViewModels
     {
         public string aspnetId { get; set; }
         public string UserName { get; set; }
-        public int UserId { get; set; }
         public string Email { get; set; }
-        public int? UserTypeId { get; set; }
         public bool? isActive { get; set; }
-        public string DivisionName { get; set; }
-        public string DistrictName { get; set; }
-        public string userTypeName { get; set; }
-        public DateTime? joiningDate { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public DateTime? createdAt { get; set; }
         public string mobileNo { get; set; }
         public string email { get; set; }
-        public int? status { get; set; }
-        public int? photoId { get; set; }
+
         public string roleId { get; set; }
         public string roleName{ get; set; }
         [DataType(DataType.ImageUrl)]
@@ -37,7 +31,11 @@ namespace NayeemApplication.Areas.Auth.Models.AccountViewModels
         [Display(Name = "Date Of Birth")]
         public DateTime dob { get; set; }
         [RegularExpression("([0-9]+)")]
-        public int userCity { get; set; }
+        public int userCityId { get; set; }
+        public string userCityName { get; set; }  
+        
+        public int userCountryId { get; set; }
+        public string userCountryName { get; set; }
 
 
 

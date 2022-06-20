@@ -39,26 +39,6 @@ namespace NayeemApplication.Services.AuthService
             return await _context.Users.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<AspNetUsersViewModel>> GetUserInfoList()
-        {
-            var result =await (from a in _context.Users
-                               join ur in _context.UserRoles on a.Id equals ur.UserId
-                               join r in _context.Roles on ur.RoleId equals r.Id
-                               //join dl in _context.dealers on a.Id equals dl.ApplicationUserId
-                               select new AspNetUsersViewModel
-                               {
-                                     aspnetId=a.Id,
-                                     UserName = a.UserName,
-                                     Email = a.Email,
-                                     roleName=r.Name,
-                                     isActive=a.isActive,
-                                  
-                               }).ToListAsync();
-            
-            return result;
-        }
-
-
 
         public async Task<bool> DeleteRoleById(string Id)
         {

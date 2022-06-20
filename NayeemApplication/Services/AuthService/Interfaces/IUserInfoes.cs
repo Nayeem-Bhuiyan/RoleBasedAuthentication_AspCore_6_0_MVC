@@ -14,7 +14,6 @@ namespace NayeemApplication.Services.AuthService.Interfaces
         Task<string> CheckPhone(string phoneNumber);
         Task<string> DeleteUser(string id);
         Task<string> UpdateUserStatusByUserIdAndStatus(string id, int status);
-        Task<IEnumerable<AspNetUsersViewModel>> GetUserInfoList();
         Task<string> GetUserRoleByByUserId(string userId);
         Task<IEnumerable<ApplicationUser>> GetUsers();
 

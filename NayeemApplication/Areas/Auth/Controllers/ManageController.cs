@@ -21,6 +21,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ILogger _logger;
         private readonly IUserInfoes _userInfoes;
+        private readonly IUserServiceSP _userServiceSP;
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
@@ -29,7 +30,8 @@ namespace NayeemApplication.Areas.Auth.Controllers
           ISmsSender smsSender,
           ILoggerFactory loggerFactory,
           RoleManager<ApplicationRole> roleManager,
-          IUserInfoes userInfoes
+          IUserInfoes userInfoes,
+          IUserServiceSP userServiceSP
          )
         {
             _userManager = userManager;
@@ -40,6 +42,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
             _logger = loggerFactory.CreateLogger<ManageController>();
             _roleManager = roleManager;
             _userInfoes = userInfoes;
+            _userServiceSP =userServiceSP;
         }
 
 
@@ -61,7 +64,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
 
             UserListViewModel model = new UserListViewModel
             {
-                aspNetUsersViewModels = await _userInfoes.GetUserInfoList(),
+                aspNetUsersViewModels = await _userServiceSP.GetUserInfoList(),
                 userRoles = lstRole,
             };
             return View(model);
@@ -273,7 +276,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
             }
             UserListViewModel model = new UserListViewModel
             {
-                aspNetUsersViewModels = await _userInfoes.GetUserInfoList(),
+                aspNetUsersViewModels = await _userServiceSP.GetUserInfoList(),
                 userRoles = lstRole,
 
             };
@@ -576,46 +579,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
             });
         }
 
-        ////
-        //// POST: /Manage/LinkLogin
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> LinkLogin(string provider)
-        //{
-        //    // Clear the existing external cookie to ensure a clean login process
-        //    await HttpContext.Authentication.SignOutAsync(_externalCookieScheme);
-
-        //    // Request a redirect to the external login provider to link a login for the current user
-        //    var redirectUrl = Url.Action(nameof(LinkLoginCallback), "Manage");
-        //    var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
-        //    return Challenge(properties, provider);
-        //}
-
-        ////
-        //// GET: /Manage/LinkLoginCallback
-        //[HttpGet]
-        //public async Task<ActionResult> LinkLoginCallback()
-        //{
-        //    var user = await GetCurrentUserAsync();
-        //    if (user == null)
-        //    {
-        //        return View("Error");
-        //    }
-        //    var info = await _signInManager.GetExternalLoginInfoAsync(await _userManager.GetUserIdAsync(user));
-        //    if (info == null)
-        //    {
-        //        return RedirectToAction(nameof(ManageLogins), new { Message = ManageMessageId.Error });
-        //    }
-        //    var result = await _userManager.AddLoginAsync(user, info);
-        //    var message = ManageMessageId.Error;
-        //    if (result.Succeeded)
-        //    {
-        //        message = ManageMessageId.AddLoginSuccess;
-        //        // Clear the existing external cookie to ensure a clean login process
-        //        await HttpContext.Authentication.SignOutAsync(_externalCookieScheme);
-        //    }
-        //    return RedirectToAction(nameof(ManageLogins), new { Message = message });
-        //}
+       
 
         #region Helpers
 

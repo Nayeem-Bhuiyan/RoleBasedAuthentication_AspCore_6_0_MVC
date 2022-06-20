@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using NayeemApplication.Areas.Auth.Models.AccountViewModels;
 using NayeemApplication.Data.Entity.ApplicationUsersEntity;
 using NayeemApplication.Services.AuthService.Interfaces;
 using System.Data;
@@ -95,6 +96,46 @@ namespace NayeemApplication.Services.AuthService
 
             };
         }
+
+
+
+       
+
+
+        public async Task<IEnumerable<AspNetUsersViewModel>> GetUserInfoList()
+        {
+            List<AspNetUsersViewModel> CustomerAspNetUsersViewModelList = new List<AspNetUsersViewModel>();
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("Sp_AllAspNetUsersDetails", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                await con.OpenAsync();
+                SqlDataReader rdr = await cmd.ExecuteReaderAsync();
+                while (await rdr.ReadAsync())
+                {
+                    AspNetUsersViewModel objAspNetUsersViewModel = new AspNetUsersViewModel();
+                    objAspNetUsersViewModel.aspnetId = rdr["id"].ToString();
+                    objAspNetUsersViewModel.userImg =rdr["userImg"].ToString(); 
+                    objAspNetUsersViewModel.userCV =rdr["userCV"].ToString(); 
+                    objAspNetUsersViewModel.DateOfBirth =Convert.ToDateTime(rdr["dob"].ToString());
+                    objAspNetUsersViewModel.isActive =Convert.ToBoolean(rdr["isActive"].ToString());
+                    objAspNetUsersViewModel.UserName =rdr["UserName"].ToString();
+                    objAspNetUsersViewModel.Email =rdr["Email"].ToString(); //fk
+                    objAspNetUsersViewModel.mobileNo =rdr["PhoneNumber"].ToString();
+                    objAspNetUsersViewModel.userCityId =Convert.ToInt32(rdr["CityId"].ToString());
+                    objAspNetUsersViewModel.userCityName =rdr["cityName"].ToString();
+                    objAspNetUsersViewModel.userCountryId =Convert.ToInt32(rdr["CountryId"].ToString());
+                    objAspNetUsersViewModel.userCountryName =rdr["CountryName"].ToString(); //fk
+                    objAspNetUsersViewModel.roleId =rdr["RoleId"].ToString();
+                    objAspNetUsersViewModel.roleName =rdr["RoleName"].ToString();
+                    CustomerAspNetUsersViewModelList.Add(objAspNetUsersViewModel);
+                }
+                con.Close();
+            }
+            return CustomerAspNetUsersViewModelList;
+        }
+
+
 
     }
 }

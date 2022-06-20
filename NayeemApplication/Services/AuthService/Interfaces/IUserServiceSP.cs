@@ -1,4 +1,5 @@
-﻿using NayeemApplication.Data.Entity.ApplicationUsersEntity;
+﻿using NayeemApplication.Areas.Auth.Models.AccountViewModels;
+using NayeemApplication.Data.Entity.ApplicationUsersEntity;
 
 namespace NayeemApplication.Services.AuthService.Interfaces
 {
@@ -6,6 +7,6 @@ namespace NayeemApplication.Services.AuthService.Interfaces
     {
         Task<ApplicationUser> GetUserInfoByUser(string userName);
         Task<ApplicationUser> GetUserInfoByEmailAsync(string email);
-
+        Task<IEnumerable<AspNetUsersViewModel>> GetUserInfoList();
     }
 }
