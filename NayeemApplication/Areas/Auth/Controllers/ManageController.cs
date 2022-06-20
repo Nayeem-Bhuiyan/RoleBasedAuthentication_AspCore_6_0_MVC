@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NayeemApplication.Services.CityService.Interface;
+using NayeemApplication.Services.CountryService.Interface;
+
 namespace NayeemApplication.Areas.Auth.Controllers
 {
     [Authorize]
@@ -22,6 +25,8 @@ namespace NayeemApplication.Areas.Auth.Controllers
         private readonly ILogger _logger;
         private readonly IUserInfoes _userInfoes;
         private readonly IUserServiceSP _userServiceSP;
+        private readonly ICityService _iCityService;
+        private readonly ICountryService _iCountryService;
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
@@ -31,7 +36,9 @@ namespace NayeemApplication.Areas.Auth.Controllers
           ILoggerFactory loggerFactory,
           RoleManager<ApplicationRole> roleManager,
           IUserInfoes userInfoes,
-          IUserServiceSP userServiceSP
+          IUserServiceSP userServiceSP,
+          ICityService iCityService,
+          ICountryService iCountryService
          )
         {
             _userManager = userManager;
@@ -43,6 +50,8 @@ namespace NayeemApplication.Areas.Auth.Controllers
             _roleManager = roleManager;
             _userInfoes = userInfoes;
             _userServiceSP =userServiceSP;
+            _iCityService = iCityService;
+            _iCountryService = iCountryService;
         }
 
 
@@ -66,6 +75,9 @@ namespace NayeemApplication.Areas.Auth.Controllers
             {
                 aspNetUsersViewModels = await _userServiceSP.GetUserInfoList(),
                 userRoles = lstRole,
+                Countries=await _iCountryService.GetAllCountrysAsync(),
+                Cities=await _iCityService.GetAllCity()
+                
             };
             return View(model);
         }
@@ -246,6 +258,8 @@ namespace NayeemApplication.Areas.Auth.Controllers
             if (model.PreRoleId != null)
             {
                 await _userManager.RemoveFromRoleAsync(user, model.PreRoleId);
+
+
 
             }
             IdentityResult response= await _userManager.AddToRoleAsync(user, model.RoleId);

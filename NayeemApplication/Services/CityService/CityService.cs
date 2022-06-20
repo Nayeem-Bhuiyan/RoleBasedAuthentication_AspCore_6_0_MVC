@@ -42,6 +42,34 @@ namespace NayeemApplication.Services.CityService
 
         }
 
+
+        public async Task<IEnumerable<City>> GetAllCity()
+        {
+            List<City> listCity = new List<City>();
+            using (SqlConnection sql = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("[Sp_AllCity]", sql))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    await sql.OpenAsync();
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            listCity.Add(MapToALLCity(reader));
+                        }
+                    }
+
+
+                }
+
+                return listCity;
+            }
+
+
+        }
+
+
         private City MapToALLCity(SqlDataReader reader)
         {
             return new City()

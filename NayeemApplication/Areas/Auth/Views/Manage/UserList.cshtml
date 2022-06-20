@@ -269,7 +269,7 @@ else
             <!--begin::Modal header-->
             <div class="modal-header">
                 <!--begin::Modal title-->
-                <h3 class="fw-boldest text-dark fs-1 mb-0">Edit User Role</h3>
+                <h3 class="fw-boldest text-dark fs-1 mb-0">Edit User Info</h3>
                 <!--end::Modal title-->
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
@@ -301,7 +301,15 @@ else
                         <span class="input-group-text">Email</span>
                         <input type="text" class="form-control" name="email" id="email" placeholder="Email" aria-label="email" aria-describedby="email" readonly />
                     </div>
+                    <div class="input-group mb-5">
+                        <span class="input-group-text">User Photo</span>
+                        <img src="" id="userImageShow" name="userImageShow" alt="Alternate Text" />
+                        <input type="text" class="form-control" name="email" id="email" placeholder="Email" aria-label="email" aria-describedby="email" readonly />
 
+                        @*<span class="input-group-text">User CV</span>*@
+                        <a class="input-group-text" href="" id="previousUserCV">User CV</a>
+                        <input type="file" class="form-control d-none" name="email" id="email" placeholder="Email" aria-label="email" aria-describedby="email" readonly />
+                    </div>
                     <div class="input-group mb-5">
                         <span class="input-group-text">Role</span>
                         <select class="form-select" aria-label="Select example" name="RoleId" id="RoleId">
@@ -309,6 +317,22 @@ else
                             @foreach (var data in Model.userRoles)
                             {
                                 <option value="@data.RoleName">@data.RoleName</option>
+                            }
+                        </select>
+
+                        <select class="form-select" aria-label="Select example" name="CountryId" id="CountryId">
+                            <option value="0" selected="selected">Select Country</option>
+                            @foreach (var data in Model.Countries)
+                            {
+                                <option value="@data?.Id">@data?.CountryName</option>
+                            }
+                        </select>
+
+                        <select class="form-select" aria-label="Select example" name="CityId" id="CityId">
+                            <option value="0" selected="selected">Select City</option>
+                            @foreach (var data in Model.Cities)
+                            {
+                                <option value="@data?.Id">@data?.cityName</option>
                             }
                         </select>
                     </div>
@@ -547,6 +571,17 @@ else
             $("#PreRoleId").val(roleName);
             $("#RoleId").val(roleName);
             $("#email").val(Email);
+            $("#CountryId").val(userCountryId);
+            $("#CityId").val(userCityId);
+
+           $("#userImageShow").attr("src", "/" + userImg.substring(0,10) + "/6" + userImg.substring(10));
+            $("#previousUserCV").attr("src", "/" + userCV.substring(0, 7) + "/6" + userCV.substring(7));
+
+           
+
+            
+    
+
             $('#EditUserInfoModal').modal('show');
 
         }
