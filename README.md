@@ -1,7 +1,7 @@
-#My Authentication Application
+##My Authentication Application
 
 
-#AspCore(6.0)(MVC) Role based Authentication using identity 
+##AspCore(6.0)(MVC) Role based Authentication using identity 
 
 Sql SERVER 2019
 
@@ -13,7 +13,7 @@ Please Change Email Info in Appsettings.json file
 
 Install sdk 6.0.200
 
-#Login  Information 
+##Login  Information 
 
 Email :nayeembhuiyan40@gmail.com   
 
