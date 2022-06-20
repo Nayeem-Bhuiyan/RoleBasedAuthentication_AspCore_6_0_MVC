@@ -24,10 +24,10 @@ namespace NayeemApplication.Services.MailService
                 {
                     Host = _mailSettings.Host,
                     Port = _mailSettings.Port,
-                    EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential(fromAddress.Address, _mailSettings.Password),
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, _mailSettings.Password)
+                    EnableSsl = true
                 };
                 using (var message = new MailMessage(fromAddress, toAddress)
                 {

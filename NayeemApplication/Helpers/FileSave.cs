@@ -33,14 +33,14 @@
 
         public static string SaveCV(out string fileName, IFormFile file)
         {
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".pdf" };
+            var allowedExtensions = new[] { ".jpg",".pdf",".txt",".docx" };
             string message = "success";
 
             var extention = Path.GetExtension(file.FileName);
             if (file.Length > 2000000)
                 message = "Select jpg or jpeg or png or pdf less than 2Μ";
             else if (!allowedExtensions.Contains(extention.ToLower()))
-                message = "Must be jpeg or png or pdf";
+                message = "Must be docx,txt or pdf";
 
             fileName = Path.Combine("UsersCV", DateTime.Now.Ticks + extention);
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileName);

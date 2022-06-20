@@ -134,12 +134,15 @@ namespace NayeemApplication.Areas.Auth.Controllers
                         UserName = model.FirstName+"_"+model.LastName,
                         Email = model.Email,
                         TwoFactorEnabled = false,
+                        EmailConfirmed=false,
                         PhoneNumber = model.PhoneNumber,
                         userCity=model.userCity,
                         dob = model.dateOfBirth,
                         userImg =userImageUrl,
                         userCV = cvFileUrl,
-
+                        isActive=true,
+                        PhoneNumberConfirmed=false,
+                        
                     };
 
 
@@ -148,22 +151,24 @@ namespace NayeemApplication.Areas.Auth.Controllers
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
-                        ApplicationUser CurrentUser = await _userServiceSP.GetUserInfoByEmailAsync(model.Email);
+                       // ApplicationUser CurrentUser = await _userServiceSP.GetUserInfoByEmailAsync(model.Email);
+                        
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
 
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
- 
-                        bool response = await _emailService.SendEmailAsync(model.Email, "Confirm your account", $"Please confirm your account by clicking this link: <a style='display: inline-block;background-color: #008000;color: #FFFFFF;padding: 14px 25px;text-align: center;text-decoration: none;font-size: 16px;margin-left: 20px;opacity: 0.9' href='{callbackUrl}'>Click Here</a>");
-                        if (response)
-                        {
-                            _logger.LogInformation(1, "User created a new account with password.");
-                            return RedirectToAction(nameof(EmailSuccess), new { area = "Auth", ReturnUrl = returnUrl });
-                        }
-                        else
-                        {
-                            //ModelState.AddModelError(string.Empty, "Invalid Email to Send");
-                            return View(model);
-                        }
+                            bool response = await _mailService.SendTextEmailAsync(model.Email, "Confirm your account", $"Please confirm your account by clicking this link: <a style='display: inline-block;background-color: #008000;color: #FFFFFF;padding: 14px 25px;text-align: center;text-decoration: none;font-size: 16px;margin-left: 20px;opacity: 0.9' href='{callbackUrl}'>Click Here</a>");
+                            if (response)
+                            {
+                                _logger.LogInformation(1, "User created a new account with password.");
+                                return RedirectToAction(nameof(EmailSuccess), new { area = "Auth", ReturnUrl = returnUrl });
+                            }
+                            else
+                            {
+                                ModelState.AddModelError(string.Empty, "Invalid Email to Send");
+                                return View(model);
+                            }
+                        
+                        
                     }
                     AddErrors(result);
                 }
@@ -205,12 +210,14 @@ namespace NayeemApplication.Areas.Auth.Controllers
                 ApplicationUser userInfo = new ApplicationUser();
                 if (model != null)
                 {
-                    userInfo = await _userServiceSP.GetUserInfoByUser(model.Name);
+                    userInfo = await _userServiceSP.GetUserInfoByEmailAsync(model.Name);
+                    
                     if (userInfo == null)
                     {
-                        userInfo = await _userServiceSP.GetUserInfoByEmailAsync(model.Name);
-                        model.Name = userInfo?.UserName;
+                        userInfo = await _userServiceSP.GetUserInfoByUser(model.Name);
+                       
                     }
+                    model.Name = userInfo?.UserName;
                 }
 
 

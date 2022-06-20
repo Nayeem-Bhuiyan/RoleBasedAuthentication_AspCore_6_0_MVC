@@ -84,15 +84,14 @@ namespace NayeemApplication.Services.AuthService
                 NormalizedEmail=reader["NormalizedEmail"].ToString(),
                 PhoneNumber=reader["PhoneNumber"].ToString(),
                 PasswordHash=reader["PasswordHash"].ToString(),
-
-                //EmailConfirmed=reader["EmailConfirmed"].ToString(),
-                //SecurityStamp=reader["SecurityStamp"].ToString(),
-                //ConcurrencyStamp=reader["ConcurrencyStamp"].ToString(),
-                // PhoneNumberConfirm=reader["PhoneNumberConfirm"].ToString()
-                //TwoFactorEnabled=reader["TwoFactorEnabled"].ToString(),
-                //LockoutEnd=reader["LockoutEnd"].ToString(),
-                //LockoutEnabled=reader["LockoutEnabled"].ToString(),
-                //AccessFailedCount=reader["AccessFailedCount"].ToString(),
+                EmailConfirmed=Convert.ToBoolean(reader["EmailConfirmed"]),
+                SecurityStamp=reader["SecurityStamp"].ToString(),
+                ConcurrencyStamp=reader["ConcurrencyStamp"].ToString(),
+                //PhoneNumberConfirmed=Convert.ToBoolean(reader["PhoneNumberConfirm"]),
+                TwoFactorEnabled=Convert.ToBoolean(reader["TwoFactorEnabled"]),
+                //LockoutEnd=Convert.ToDateTime(reader["LockoutEnd"]),
+                LockoutEnabled=Convert.ToBoolean(reader["LockoutEnabled"]),
+                AccessFailedCount=Convert.ToInt32(reader["AccessFailedCount"]),
 
             };
         }
