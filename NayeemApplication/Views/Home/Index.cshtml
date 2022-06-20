@@ -1,8 +1,137 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-xxl">
+    <!--begin::Card-->
+    <div class="card h-lg-100">
+        <!--begin::Card Header-->
+        <div class="card-header py-5 py-md-0 py-lg-5 py-xxl-0">
+            <!--begin::Card title-->
+            <div class="card-title flex-column">
+                <h3 class="fw-boldest m-0">Order Details</h3>
+                <span class="fs-6 fw-bold text-gray-400">Ordered: Oct 24, 2020 | SKU: XQ-36800</span>
+            </div>
+            <!--end::Card title-->
+            <!--begin::Card toolbar-->
+            <div class="card-toolbar">
+                <a href="invoice.html" class="btn btn-light btn-sm">Invoice</a>
+            </div>
+            <!--end::Card toolbar-->
+        </div>
+        <!--end::Card Header-->
+        <!--begin::Card body-->
+        <div class="card-body">
+            <!--begin::Info-->
+            <div class="d-flex align-items-start mb-7">
+                <!--begin::Image-->
+                <div class="overlay rounded overflow-hidden w-75px w-lg-125px flex-shrink-0 me-7">
+                    <div class="overlay-wrapper rounded bg-light">
+                        <img src="../../assets/media/products/13.png" alt="image" class="rounded w-100">
+                    </div>
+                    <div class="overlay-layer bg-dark bg-opacity-10">
+                        <a href="#" class="btn btn-sm btn-primary btn-shadow">Explore</a>
+                    </div>
+                </div>
+                <!--end::Image-->
+                <!--begin::Wrapper-->
+                <div class="flex-grow-1 d-flex align-items-start justify-content-between flex-wrap py-24">
+                    <!--begin::Details-->
+                    <div class="d-flex flex-column align-items-start py-1 me-">
+                        <a href="#" class="fs-3 text-dark text-hover-primary fw-boldest mb-2">Nike Air 200</a>
+                        <div class="text-gray-400 fw-bold fs-6 mb-4">
+                            Writing a blog post is a little like driving
+                            <br>you can study the highway code for months
+                        </div>
+                        <span class="badge badge-light-warning fw-boldest fs-7 mb-3">In Transit</span>
+                    </div>
+                    <!--end::Dtails-->
+                    <!--begin::Actions-->
+                    <div class="d-flex flex-column py-2">
+                        <a href="tracking.html" class="btn btn-success btn-sm mb-5">Track Order</a>
+                        <a href="review.html" class="btn btn-light btn-sm">Write a Review</a>
+                    </div>
+                    <!--end::Actions-->
+                </div>
+                <!--end::Wrapper-->
+            </div>
+            <!--end::Info-->
+            <!--begin::Notice-->
+            <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+                <!--begin::Icon-->
+                <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+                <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black"></rect>
+                        <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black"></rect>
+                        <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black"></rect>
+                    </svg>
+                </span>
+                <!--end::Svg Icon-->
+                <!--end::Icon-->
+                <!--begin::Wrapper-->
+                <div class="d-flex flex-stack flex-grow-1">
+                    <!--begin::Content-->
+                    <div class="fw-bold">
+                        <h4 class="text-gray-900 fw-bolder">We need your attention!</h4>
+                        <div class="fs-6 text-gray-700">
+                            Your payment was declined. To start using tools, please
+                            <a href="../billing.html">Add Payment Method</a>
+                        </div>
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Wrapper-->
+            </div>
+            <!--end::Notice-->
+            <!--begin::Order summary-->
+            <div class="row mt-8">
+                <!--begin::Col-->
+                <div class="col-xl-4 mb-10 mb-xl-0">
+                    <h3 class="fw-boldest mb-3">Delivery Address</h3>
+                    <div class="fs-5 fw-bold text-gray-600">
+                        Griffith Daniels
+                        <br>6818 Eget St.
+                        <br>Tacoma AL 92508
+                        <br>United States
+                    </div>
+                </div>
+                <!--end::Col-->
+                <!--begin::Col-->
+                <div class="col-xl-4 mb-10 mb-xl-0">
+                    <h3 class="fw-boldest mb-3">Payment Method</h3>
+                    <div class="d-flex">
+                        <!--begin::Icon-->
+                        <img src="../../assets/media/svg/card-logos/mastercard.svg" alt="" class="me-4">
+                        <!--end::Icon-->
+                        <span class="fw-boldest">**** 2704</span>
+                    </div>
+                </div>
+                <!--end::Col-->
+                <!--begin::Col-->
+                <div class="col-xl-4 fw-boldest">
+                    <h3 class="fw-boldest mb-3">Order Summary</h3>
+                    <div class="d-flex justify-content-between fs-5 fw-bold text-gray-600">
+                        <span class="me-2">Item Total:</span>
+                        <span>USD 29.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between fs-5 fw-bold text-gray-600">
+                        <span class="me-2">Delivery:</span>
+                        <span>USD 2.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between fs-5 fw-bold text-gray-600">
+                        <span class="me-2">Service Fee:</span>
+                        <span>USD 0.70</span>
+                    </div>
+                    <div class="d-flex justify-content-between fw-boldest mt-2">
+                        <h4 class="fw-boldest me-2">Grand Total:</h4>
+                        <span>USD 31.70</span>
+                    </div>
+                </div>
+                <!--end::Col-->
+            </div>
+            <!--end::Order summary-->
+        </div>
+        <!--end::Card body-->
+    </div>
+    <!--end::Card-->
 </div>

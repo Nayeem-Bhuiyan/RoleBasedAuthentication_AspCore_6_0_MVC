@@ -3,6 +3,7 @@ using NayeemApplication.Repository.CrudRepository.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using NayeemApplication.Services.AuthService.Interfaces;
 
 namespace NayeemApplication.Controllers
 {
@@ -18,10 +19,6 @@ namespace NayeemApplication.Controllers
 
         public IActionResult Index()
         {
-           
-
-
-
             return View();
         }
 
