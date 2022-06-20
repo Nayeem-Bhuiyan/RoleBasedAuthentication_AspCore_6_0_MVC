@@ -15,3 +15,4 @@ Install sdk 6.0.200
 
 Now Project Ready To Run
 
+Login Email :nayeembhuiyan40@gmail.com   Passord:12345678
