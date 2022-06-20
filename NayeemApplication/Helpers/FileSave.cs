@@ -14,8 +14,8 @@
             else if (!allowedExtensions.Contains(extention.ToLower()))
                 message = "Must be jpeg or png";
 
-            fileName =DateTime.Now.Ticks + extention;
-            string filePath= Path.Combine("UsersPhoto", DateTime.Now.Ticks + extention); ;
+            fileName =Guid.NewGuid() + extention;
+            string filePath= Path.Combine("UsersPhoto", fileName); ;
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filePath);
             try
             {
@@ -43,8 +43,8 @@
             else if (!allowedExtensions.Contains(extention.ToLower()))
                 message = "Must be docx,txt or pdf";
 
-            fileName =DateTime.Now.Ticks + extention;
-            string filePath = Path.Combine("UsersCV", DateTime.Now.Ticks + extention);
+            fileName =Guid.NewGuid() + extention;
+            string filePath = Path.Combine("UsersCV", fileName);
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filePath);
             try
             {

@@ -312,7 +312,7 @@ else
                 <div class="row">
                     <div class="col-md-12">
                         <!--begin::Form-->
-                        <form id="frmData" class="form" method="post">
+                        <form id="frmData" class="form" method="post" enctype="multipart/form-data">
                             <div asp-validation-summary="All" class="text-danger"></div>
                             <input type="hidden" id="userId" name="userId">
                             <input type="hidden" id="PreRoleId" name="PreRoleId">
@@ -640,7 +640,24 @@ else
          $('#btnSave').click(function () {
             $('#frmData').on('submit', function (event) {
                 event.preventDefault();
-                var formdata = $(this).serialize();
+
+                var formdata = $("#frmData")[0];
+                var data = new FormData(formdata);
+                data.append("userImg", $('input[name="userImg"]')[0].files[0]);
+                data.append("userCV", $('input[name="userCV"]')[0].files[0]);
+                data.append("FirstName", $('#FirstName').val());
+                data.append("LastName", $('#LastName').val());
+                data.append("userCityId", $('#userCityId').val());
+                data.append("userCountryId", $('#userCountryId').val());
+                data.append("DateOfBirth", $('#DateOfBirth').val());
+                data.append("mobileNo", $('#mobileNo').val());
+                data.append("userId", $('#userId').val());
+                data.append("PreRoleId", $('#PreRoleId').val());
+                data.append("RoleId", $('#RoleId').val());
+
+                console.log("formdata");
+
+
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You want to save this!",
@@ -652,9 +669,14 @@ else
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '/Auth/Manage/EditRole',
-                            data: formdata,
+                            url: '/Auth/Manage/UpdateUserInfo',
                             type: "POST",
+                            enctype: "multipart/form-data",
+                            data: data,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            timeout: 600000,
                             beforeSend: function () {
                                 $('#btnSave').attr('disabled', 'disabled');
                                 $('#btnSave').val('Submitting...');

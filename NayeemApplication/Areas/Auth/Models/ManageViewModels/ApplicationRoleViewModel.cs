@@ -40,7 +40,6 @@ namespace NayeemApplication.Areas.Auth.Models.AccountViewModels
         public string Email { get; set; }
         public bool? isActive { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public DateTime? createdAt { get; set; }
         public string mobileNo { get; set; }
         public string email { get; set; }
 
@@ -50,18 +49,10 @@ namespace NayeemApplication.Areas.Auth.Models.AccountViewModels
         public IFormFile userImg { get; set; }
         [Required]
         public IFormFile userCV { get; set; }
-
-
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
-        [Display(Name = "Date Of Birth")]
-        public DateTime dob { get; set; }
         [RegularExpression("([0-9]+)")]
         public int userCityId { get; set; }
-        public string userCityName { get; set; }
-
         public int userCountryId { get; set; }
-        public string userCountryName { get; set; }
+
 
 
 

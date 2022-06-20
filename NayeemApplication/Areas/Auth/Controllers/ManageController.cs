@@ -251,58 +251,79 @@ namespace NayeemApplication.Areas.Auth.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        public async Task<IActionResult> UpdateUserInfo([FromForm] ApplicationRoleViewModel model)
+        {
+
+            try
+            {
+                ApplicationUser user = await _userManager.FindByEmailAsync(model.Email);
+                string userImageUrl = "/DefaultImage/NoImage.png";
+                string imageFileUrl;
+                string userPhotoUploadSuccessMsg = FileSave.SaveImage(out imageFileUrl, model.userImg);
+
+                if (userPhotoUploadSuccessMsg == "success")
+                {
+                    userImageUrl = "";
+                    userImageUrl = imageFileUrl;
+                }
+                else
+                {
+                    return View(model);
+                }
+
+
+                string userCvUrl = "/DefaultImage/nofile.png";
+                string cvFileUrl;
+                string userCvUploadSuccessMsg = FileSave.SaveCV(out cvFileUrl, model.userCV);
+                if (userCvUploadSuccessMsg=="success")
+                {
+                    userCvUrl = "";
+                    userCvUrl=cvFileUrl;
+                }
+                else
+                {
+                    return View(model);
+                }
+
+
+
+                   user.Id=model.userId;
+                   user.UserName = model.FirstName+"_"+model.LastName;
+                   user.Email = model.Email;
+                   user.TwoFactorEnabled = false;
+                   user.EmailConfirmed=true;
+                   user.PhoneNumber = model.mobileNo;
+                   user.userCity=model.userCityId;
+                   user.dob = Convert.ToDateTime(model.DateOfBirth.ToString());
+                   user.userImg =userImageUrl;
+                   user.userCV = cvFileUrl;
+                   user.isActive=true;
+                   user.PhoneNumberConfirmed=false;
+
+               
+
+
+                
+                await _userManager.UpdateAsync(user);
+                return Json(true);
+            }
+            catch (Exception)
+            {
+
+                return Json(false);
+            }
+
+    
+        }
+
+
+
+        [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> EditRole([FromForm] ApplicationRoleViewModel model)
         {
 
-            ApplicationUser user = await _userManager.FindByNameAsync(model.userName);
-
-
-
-
-            string userImageUrl = "/DefaultImage/NoImage.png";
-            string imageFileUrl;
-            string userPhotoUploadSuccessMsg = FileSave.SaveImage(out imageFileUrl, model.userImg);
-
-            if (userPhotoUploadSuccessMsg == "success")
-            {
-                userImageUrl = "";
-                userImageUrl = imageFileUrl;
-            }
-            else
-            {
-                return View(model);
-            }
-
-
-            string userCvUrl = "/DefaultImage/nofile.png";
-            string cvFileUrl;
-            string userCvUploadSuccessMsg = FileSave.SaveCV(out cvFileUrl, model.userCV);
-            if (userCvUploadSuccessMsg=="success")
-            {
-                userCvUrl = "";
-                userCvUrl=cvFileUrl;
-            }
-            else
-            {
-                return View(model);
-            }
-
-           user = new ApplicationUser
-            {
-                UserName = model.FirstName+"_"+model.LastName,
-                Email = model.Email,
-                TwoFactorEnabled = false,
-                EmailConfirmed=true,
-                PhoneNumber = model.mobileNo,
-                userCity=model.userCityId,
-                dob = Convert.ToDateTime(model.DateOfBirth.ToString()),
-                userImg =userImageUrl,
-                userCV = cvFileUrl,
-                isActive=true,
-                PhoneNumberConfirmed=false,
-
-            };
-
+            ApplicationUser user = await _userManager.FindByEmailAsync(model.Email);
 
             await _userManager.UpdateAsync(user);
 
@@ -310,7 +331,7 @@ namespace NayeemApplication.Areas.Auth.Controllers
             {
                 await _userManager.RemoveFromRoleAsync(user, model.PreRoleId);
             }
-            IdentityResult response= await _userManager.AddToRoleAsync(user, model.RoleId);
+            IdentityResult response = await _userManager.AddToRoleAsync(user, model.RoleId);
             if (response.Succeeded)
             {
                 return Json(true);
