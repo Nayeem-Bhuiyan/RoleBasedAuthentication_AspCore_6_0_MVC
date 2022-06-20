@@ -151,9 +151,10 @@ namespace NayeemApplication.Areas.Auth.Controllers
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
-                       // ApplicationUser CurrentUser = await _userServiceSP.GetUserInfoByEmailAsync(model.Email);
-                        
-                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    
+                           await _userManager.AddToRoleAsync(user, "SUPER ADMIN");
+
+                           var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                             var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
 
                             bool response = await _mailService.SendTextEmailAsync(model.Email, "Confirm your account", $"Please confirm your account by clicking this link: <a style='display: inline-block;background-color: #008000;color: #FFFFFF;padding: 14px 25px;text-align: center;text-decoration: none;font-size: 16px;margin-left: 20px;opacity: 0.9' href='{callbackUrl}'>Click Here</a>");
