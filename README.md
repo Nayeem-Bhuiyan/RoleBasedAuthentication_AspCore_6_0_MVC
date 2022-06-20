@@ -13,6 +13,8 @@ Please Change Email Info in Appsettings.json file
 
 Install sdk 6.0.200
 
+Login Email :nayeembhuiyan40@gmail.com   Passord:12345678
+
 Now Project Ready To Run
 
-Login Email :nayeembhuiyan40@gmail.com   Passord:12345678
+
