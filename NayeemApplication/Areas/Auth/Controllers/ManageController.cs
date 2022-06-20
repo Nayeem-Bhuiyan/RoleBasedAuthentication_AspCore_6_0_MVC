@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NayeemApplication.Services.CityService.Interface;
 using NayeemApplication.Services.CountryService.Interface;
+using NayeemApplication.Helpers;
 
 namespace NayeemApplication.Areas.Auth.Controllers
 {
@@ -254,6 +255,56 @@ namespace NayeemApplication.Areas.Auth.Controllers
         {
 
             ApplicationUser user = await _userManager.FindByNameAsync(model.userName);
+
+
+
+
+            string userImageUrl = "/DefaultImage/NoImage.png";
+            string imageFileUrl;
+            string userPhotoUploadSuccessMsg = FileSave.SaveImage(out imageFileUrl, model.userImg);
+
+            if (userPhotoUploadSuccessMsg == "success")
+            {
+                userImageUrl = "";
+                userImageUrl = imageFileUrl;
+            }
+            else
+            {
+                return View(model);
+            }
+
+
+            string userCvUrl = "/DefaultImage/nofile.png";
+            string cvFileUrl;
+            string userCvUploadSuccessMsg = FileSave.SaveCV(out cvFileUrl, model.userCV);
+            if (userCvUploadSuccessMsg=="success")
+            {
+                userCvUrl = "";
+                userCvUrl=cvFileUrl;
+            }
+            else
+            {
+                return View(model);
+            }
+
+           user = new ApplicationUser
+            {
+                UserName = model.FirstName+"_"+model.LastName,
+                Email = model.Email,
+                TwoFactorEnabled = false,
+                EmailConfirmed=true,
+                PhoneNumber = model.mobileNo,
+                userCity=model.userCityId,
+                dob = Convert.ToDateTime(model.DateOfBirth.ToString()),
+                userImg =userImageUrl,
+                userCV = cvFileUrl,
+                isActive=true,
+                PhoneNumberConfirmed=false,
+
+            };
+
+
+            await _userManager.UpdateAsync(user);
 
             if (model.PreRoleId != null)
             {

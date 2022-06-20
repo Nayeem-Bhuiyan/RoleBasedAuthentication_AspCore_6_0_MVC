@@ -46,16 +46,11 @@ namespace NayeemApplication.Areas.Auth.Models.AccountViewModels
 
         public string roleId { get; set; }
         public string roleName { get; set; }
-        [DataType(DataType.ImageUrl)]
-        [Display(Name = "Image ")]
-        [StringLength(300, ErrorMessage = "")]
         [Required]
-        public string userImg { get; set; }
-        [DataType(DataType.Url)]
-        [Display(Name = "CV Upload")]
-        [StringLength(300, ErrorMessage = "")]
+        public IFormFile userImg { get; set; }
         [Required]
-        public string userCV { get; set; }
+        public IFormFile userCV { get; set; }
+
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
