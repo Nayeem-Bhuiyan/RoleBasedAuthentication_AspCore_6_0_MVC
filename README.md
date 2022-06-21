@@ -3,6 +3,8 @@ My Authentication Application
 
 ##AspCore(6.0)(MVC) Role based Authentication using identity 
 
+Visual Studio2022
+
 Sql SERVER 2019
 
 Please Restore Sql Server database backup
