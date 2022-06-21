@@ -3,24 +3,26 @@ My Authentication Application
 
 ##AspCore(6.0)(MVC) Role based Authentication using identity 
 
-Visual Studio2022
+Intstall Visual Studio2022
 
-Sql SERVER 2019
+Install Sql SERVER 2019
 
-Please Restore Sql Server database backup
+Install dot net sdk 6.0.200
 
-Please change Connection String in Appsetting.json file 
+Download or Clone the this Project
 
-Please Change Email Info in Appsettings.json file
+Restore Sql Server database backup
 
-Install sdk 6.0.200
+change Connection String in Appsetting.json file 
+
+Change Email Info in Appsettings.json file
+
+Now Project Ready To Run
 
 ##Login  Information 
 
 Email :nayeembhuiyan40@gmail.com   
 
 Passord:12345678
-
-Now Project Ready To Run
 
 
